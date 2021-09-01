@@ -283,8 +283,7 @@ export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 
 
 docker login
-1e409243-f590-443a-8770-944c53e9c010
-
+[docker pass]
 
 
 
