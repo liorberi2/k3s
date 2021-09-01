@@ -1,0 +1,20 @@
+# Default values for nwthelm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+deployment:
+  replicaCount: 1
+  name: my-deployment
+  image:
+    repository: liorberi/node-weight-tracker
+    pullPolicy: Always
+    tag: latest
+    app: nwthelm11
+
+service:
+  name: my-service
+  type: NodePort
+  port: 8080
+  TargetPort: 8080
+  Nodeport: 30235
+

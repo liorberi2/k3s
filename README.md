@@ -260,16 +260,30 @@ Once satisfied, tear down your application:
 
 ===============
 helm create my-app-chart
+helm install --dry-run --debug ./my-app-chart --set service.NodePort --generate-name
+
+helm install --dry-run --debug ./nwt-chart --set service.NodePort --generate-name
+
+nwthelm/
+
+
+helm install --dry-run --debug ./nwthelm --set service.NodePort --generate-name
+
+
+=============
+
+fix connect issue to cluster (Helm issue)
+
+Try setting the KUBECONFIG environment variable.
+export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+
+
+====================
 
 
 
-
-
-
-
-
-
-
+docker login
+1e409243-f590-443a-8770-944c53e9c010
 
 
 
@@ -298,3 +312,122 @@ spec:
     image: <your-private-image>
   imagePullSecrets:
   - name: regcred
+
+
+
+==============
+
+helm install n.w.t-chart n.w.t/ --values n.w.t/values.yaml
+
+===================
+
+Use the public standard load balancer
+After creating an AKS cluster with Outbound Type: Load Balancer (default), the cluster is ready to use the load balancer to expose services as well.
+
+For that you can create a public Service of type LoadBalancer as shown in the following example. Start by creating a service manifest named public-svc.yaml:
+
+YAML
+
+root@bootcamp-linux-3m8n:/home/lior# cat public-svc.yaml
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-ils-service
+spec:
+  ports:
+    - name: http
+      port: 80
+      nodePort: 30062
+  selector:
+    app: nginx
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+          - containerPort: 80
+  selector:
+    matchLabels:
+      app: nginx
+
+Deploy the public service manifest by using kubectl apply and specify the name of your YAML manifest:
+
+Azure CLI
+
+Copy
+
+Try It
+kubectl apply -f public-svc.yaml
+The Azure Load Balancer will be configured with a new public IP that will front this new service. Since the Azure Load Balancer can have multiple Frontend IPs, each new service deployed will get a new dedicated frontend IP to be uniquely accessed.
+
+You can confirm your service is created and the load balancer is configured by running for example:
+
+Azure CLI
+
+Copy
+
+Try It
+kubectl get service public-svc
+Console
+
+Copy
+NAMESPACE     NAME          TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)         AGE
+default       public-svc    LoadBalancer   10.0.39.110    52.156.88.187   80:32068/TCP    52s
+
+
+===========================
+
+root@bootcamp-linux-3m8n:/home/lior/nwt-chart# kubectl get service
+NAME                TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+kubernetes          ClusterIP      10.43.0.1       <none>        443/TCP          11d
+my-app-1-service    NodePort       10.43.113.129   <none>        8080:30001/TCP   11d
+nwt                 NodePort       10.43.48.231    <none>        8080:30002/TCP   11d
+public-svc          LoadBalancer   10.43.224.63    <pending>     80:32620/TCP     3h14m
+nginx-ils-service   NodePort       10.43.11.198    <none>        80:30062/TCP     167m
+root@bootcamp-linux-3m8n:/home/lior/nwt-chart# docker get images
+docker: 'get' is not a docker command.
+See 'docker --help'
+root@bootcamp-linux-3m8n:/home/lior/nwt-chart# docker images
+REPOSITORY                            TAG                    IMAGE ID       CREATED         SIZE
+nginx                                 latest                 dd34e67e3371   12 days ago     133MB
+liorberi/my-app                       1.0.136                7275a785060d   2 weeks ago     87.6MB
+rancher/klipper-helm                  v0.6.1-build20210616   76704fc9d615   2 months ago    189MB
+liorberi/node-weight-tracker          latest                 fb9ceab1694c   3 months ago    151MB
+rancher/library-traefik               2.4.8                  deaf4b1027ed   4 months ago    91.3MB
+rancher/coredns-coredns               1.8.3                  3885a5b7f138   6 months ago    43.5MB
+kubernetesui/dashboard                v2.2.0                 5c4ee6ca42ce   6 months ago    225MB
+k8s.gcr.io/ingress-nginx/controller   <none>                 435df390f367   6 months ago    279MB
+rancher/local-path-provisioner        v0.0.19                148c19256271   9 months ago    42.4MB
+jettech/kube-webhook-certgen          v1.5.1                 a013daf8730d   9 months ago    44.7MB
+rancher/klipper-lb                    v0.2.0                 465db341a9e5   9 months ago    6.1MB
+kubernetesui/metrics-scraper          v1.0.6                 48d79e554db6   10 months ago   34.5MB
+rancher/metrics-server                v0.3.6                 9dd718864ce6   22 months ago   39.9MB
+rancher/pause                         3.1                    da86e6ba6ca1   3 years ago     742kB
+root@bootcamp-linux-3m8n:/home/lior/nwt-chart#
+root@bootcamp-linux-3m8n:/home/lior/nwt-chart#
+
+
+=============
+ helm install  ./nwthelm/  --generate-name
+
+ ==========
+
+
+ root@bootcamp-linux-3m8n:/home/lior/nwthelm# kubectl get deployments --all-namespaces
+
+root@bootcamp-linux-3m8n:/home/lior/nwthelm# kubectl delete deployment nwthelm2
+
+
+=========================
+
