@@ -5,7 +5,7 @@ Description
 k3s kubernetes with nginx ingress controller
  
 
-1) **Install Docker on Ubuntu 20.04 **
+1) ***Install Docker on Ubuntu 20.04***
 The next step is to install docker on on the hosts. As discussed before, Kubernetes is used to manage Docker containers on hybrid cloud infrastructure. Thus we need to have docker up and running on all the nodes before we can setup K3s.
 
 Add Docker APT repository:
@@ -46,7 +46,7 @@ newgrp docker
 
 --------------
 
-2) Setup the Master k3s Node
+2) ***Setup the Master k3s Node***
 
 In this step, we shall install and prepare the master node. This involves installing the k3s service and starting it.
 
@@ -60,7 +60,7 @@ You can check if the master node is working by :
 sudo kubectl get nodes -o wide
 
 =============================================================
-3) Setup the Master k3s Node
+3) ***Setup the Master k3s Node***
 In this step, we shall install and prepare the master node. This involves installing the k3s service and starting it.
 
 curl -sfL https://get.k3s.io | sh -s - --docker
@@ -76,7 +76,7 @@ sudo kubectl get nodes -o wide
 
 ======================
 
-4) Allow ports on firewall
+4) ***Allow ports on firewall***
 We need to allow ports that will will be used to communicate between the master and the worker nodes. The ports are 443 and 6443.
 
 sudo ufw allow 6443/tcp
@@ -93,7 +93,7 @@ NAME                  STATUS   ROLES                  AGE   VERSION
 bootcamp-linux-3m8n   Ready    control-plane,master   12m   v1.21.3+k3s1
 
 ===================
-5)instll Helm
+5)***instll Helm***
 $ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
 $ chmod 700 get_helm.sh
 $ ./get_helm.sh
@@ -114,7 +114,7 @@ $ helm repo update
 
 
 
-6) Setup NGINX Ingress Controller on Kubernetes
+6) ***Setup NGINX Ingress Controller on Kubernetes***
 
 kubectl get nodes -o wide
 
@@ -141,11 +141,10 @@ ingress-nginx-controller   LoadBalancer   10.21.1.110   10.0.0.3      80:32495/T
 
 =================
 
-7)
 
 ===================================
 
-Deploy to Kubernetes
+7) ***Deploy to Kubernetes***
 
 yaml file:
 
@@ -303,7 +302,7 @@ helm install --dry-run --debug ./nwthelm --set service.NodePort --generate-name
 
 =============
 
-fix connect issue to cluster (Helm issue)
+***fix connect issue to cluster (Helm issue)***
 
 Try setting the KUBECONFIG environment variable.
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
@@ -311,7 +310,7 @@ export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 
 ====================
 
-make docker repo private and enable login
+***make docker repo private and enable login***
 
 * go to setting of your repo
   make private 
